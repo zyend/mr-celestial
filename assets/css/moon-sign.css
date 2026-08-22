@@ -1,0 +1,409 @@
+.mrc-moon-sign {
+    --mrc-moon-border: #d8d8d8;
+    --mrc-moon-bg: #fff;
+    --mrc-moon-text: #2d2d2d;
+    --mrc-moon-muted: #666;
+    --mrc-moon-error: #a02222;
+    --mrc-moon-purple: #67388d;
+    --mrc-moon-icon-bg: #a9cf66;
+    --mrc-moon-icon-border: #789f40;
+
+    width: 100%;
+    max-width: none;
+    color: var(--mrc-moon-text);
+
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 3rem;
+    row-gap: 1.5rem;
+    align-items: start;
+
+    overflow: visible;
+}
+
+.mrc-moon-sign *,
+.mrc-moon-sign *::before,
+.mrc-moon-sign *::after {
+    box-sizing: border-box;
+}
+
+
+/* ---------------------------------------------------------
+   Title
+--------------------------------------------------------- */
+
+.mrc-moon-sign__title {
+    grid-column: 1 / -1;
+    margin: 0;
+}
+
+
+/* ---------------------------------------------------------
+   Calculator Form
+--------------------------------------------------------- */
+
+.mrc-moon-sign__form {
+    position: relative;
+    z-index: 10;
+    grid-column: 1;
+
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+
+    overflow: visible;
+}
+
+.mrc-moon-sign__field {
+    min-width: 0;
+}
+
+.mrc-moon-sign__location-field,
+.mrc-moon-sign__error,
+.mrc-moon-sign__submit {
+    grid-column: 1 / -1;
+}
+
+.mrc-moon-sign__field label {
+    display: block;
+    margin-bottom: .4rem;
+    font-weight: 600;
+}
+
+.mrc-moon-sign__field input[type="date"],
+.mrc-moon-sign__field input[type="time"],
+.mrc-moon-sign__field input[type="text"] {
+    width: 100%;
+    min-height: 48px;
+    padding: .7rem .8rem;
+
+    border: 1px solid var(--mrc-moon-border);
+    border-radius: 3px;
+
+    background: var(--mrc-moon-bg);
+    color: inherit;
+
+    font: inherit;
+}
+
+.mrc-moon-sign__field input:focus {
+    outline: 2px solid currentColor;
+    outline-offset: 1px;
+}
+
+.mrc-moon-sign__field small {
+    display: block;
+    margin-top: .35rem;
+
+    color: var(--mrc-moon-muted);
+    font-size: .875em;
+}
+
+
+/* ---------------------------------------------------------
+   Location Autocomplete
+--------------------------------------------------------- */
+
+.mrc-moon-sign__location-field {
+    position: relative;
+    z-index: 100;
+    overflow: visible;
+}
+
+.mrc-moon-sign__suggestions {
+    position: absolute;
+    z-index: 9999;
+
+    top: calc(100% - 1.6rem);
+    left: 0;
+    right: 0;
+
+    max-height: 280px;
+    overflow-y: auto;
+
+    border: 1px solid var(--mrc-moon-border);
+    border-radius: 3px;
+
+    background: var(--mrc-moon-bg);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .12);
+}
+
+.mrc-moon-sign__suggestion {
+    display: block;
+    width: 100%;
+    padding: .7rem .8rem;
+
+    border: 0;
+    border-bottom: 1px solid var(--mrc-moon-border);
+
+    background: transparent;
+    color: inherit;
+
+    font: inherit;
+    text-align: left;
+
+    cursor: pointer;
+}
+
+.mrc-moon-sign__suggestion:last-child {
+    border-bottom: 0;
+}
+
+.mrc-moon-sign__suggestion:not(.mrc-moon-sign__suggestion--empty):hover,
+.mrc-moon-sign__suggestion:not(.mrc-moon-sign__suggestion--empty):focus {
+    background: rgba(0, 0, 0, .05);
+    outline: none;
+}
+
+.mrc-moon-sign__suggestion--empty {
+    color: var(--mrc-moon-muted);
+    cursor: default;
+}
+
+
+/* ---------------------------------------------------------
+   Errors
+--------------------------------------------------------- */
+
+.mrc-moon-sign__error {
+    padding: .7rem .85rem;
+
+    border: 1px solid currentColor;
+
+    background: rgba(160, 34, 34, .05);
+    color: var(--mrc-moon-error);
+}
+
+
+/* ---------------------------------------------------------
+   Submit Button
+--------------------------------------------------------- */
+
+.mrc-moon-sign__submit {
+    justify-self: start;
+
+    width: auto;
+    min-width: 274px;
+    min-height: 44px;
+    padding: .75rem 1.75rem;
+
+    border: 1px solid var(--mrc-moon-purple);
+    border-radius: 0;
+
+    background: var(--mrc-moon-purple);
+    color: #fff;
+
+    font: inherit;
+    font-weight: 600;
+    text-transform: uppercase;
+
+    cursor: pointer;
+
+    transition:
+        background-color .2s ease,
+        color .2s ease,
+        border-color .2s ease;
+}
+
+.mrc-moon-sign__submit:hover {
+    border-color: var(--mrc-moon-purple);
+    background: transparent;
+    color: var(--mrc-moon-purple);
+}
+
+.mrc-moon-sign__submit:focus-visible {
+    outline: 2px solid var(--mrc-moon-purple);
+    outline-offset: 3px;
+}
+
+.mrc-moon-sign__submit:disabled {
+    opacity: .65;
+    cursor: wait;
+}
+
+
+/* ---------------------------------------------------------
+   Celestial Results
+--------------------------------------------------------- */
+
+.mrc-moon-sign__result {
+    position: relative;
+    z-index: 1;
+    grid-column: 2;
+    margin-top: 0;
+    min-width: 0;
+}
+
+.mrc-moon-sign__results-card {
+    border: 1px solid var(--mrc-moon-border);
+    background: var(--mrc-moon-bg);
+}
+
+.mrc-moon-sign__results-heading {
+    padding: 1rem 1.15rem;
+    border-bottom: 1px solid var(--mrc-moon-border);
+}
+
+.mrc-moon-sign__results-heading h3,
+.mrc-moon-sign__results-heading p {
+    margin: 0;
+}
+
+.mrc-moon-sign__results-heading h3 {
+    font-size: 1.25rem;
+}
+
+.mrc-moon-sign__results-heading p {
+    margin-top: .25rem;
+    color: var(--mrc-moon-muted);
+    font-size: .875rem;
+}
+
+.mrc-moon-sign__results-table {
+    width: 100%;
+}
+
+.mrc-moon-sign__result-row {
+    display: grid;
+    grid-template-columns: 76px 126px minmax(0, 1fr);
+    gap: .9rem;
+    align-items: center;
+
+    padding: .9rem 1.15rem;
+    border-bottom: 1px solid var(--mrc-moon-border);
+}
+
+.mrc-moon-sign__result-row:last-child {
+    border-bottom: 0;
+}
+
+.mrc-moon-sign__body {
+    font-weight: 600;
+}
+
+.mrc-moon-sign__zodiac {
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+    min-width: 0;
+}
+
+.mrc-moon-sign__zodiac-glyph {
+    flex: 0 0 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    font-size: 1.8rem;
+    line-height: 1;
+}
+
+.mrc-moon-sign__zodiac-name {
+    color: var(--mrc-moon-purple);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.mrc-moon-sign__zodiac-name:hover,
+.mrc-moon-sign__zodiac-name:focus {
+    text-decoration: underline;
+}
+
+.mrc-moon-sign__result-detail {
+    min-width: 0;
+}
+
+.mrc-moon-sign__result-detail p {
+    margin: 0;
+    font-size: .9rem;
+    line-height: 1.45;
+}
+
+.mrc-moon-sign__learn {
+    display: inline-block;
+    margin-top: .3rem;
+
+    color: inherit;
+    font-size: .875rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.mrc-moon-sign__learn:hover,
+.mrc-moon-sign__learn:focus {
+    color: var(--mrc-moon-purple);
+    text-decoration: underline;
+}
+
+
+/* ---------------------------------------------------------
+   Narrow Desktop / Tablet
+--------------------------------------------------------- */
+
+@media (max-width: 1100px) and (min-width: 801px) {
+    .mrc-moon-sign {
+        column-gap: 2rem;
+    }
+
+    .mrc-moon-sign__result-row {
+        grid-template-columns: 68px 1fr;
+    }
+
+    .mrc-moon-sign__result-detail {
+        grid-column: 1 / -1;
+    }
+}
+
+
+/* ---------------------------------------------------------
+   Mobile
+--------------------------------------------------------- */
+
+@media (max-width: 800px) {
+    .mrc-moon-sign {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .mrc-moon-sign__title,
+    .mrc-moon-sign__form,
+    .mrc-moon-sign__result {
+        grid-column: 1;
+    }
+
+    .mrc-moon-sign__form {
+        grid-template-columns: 1fr;
+    }
+
+    .mrc-moon-sign__result {
+        margin-top: 0;
+    }
+
+    .mrc-moon-sign__submit {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .mrc-moon-sign__result-row {
+        grid-template-columns: 72px minmax(0, 1fr);
+        gap: .65rem .85rem;
+    }
+
+    .mrc-moon-sign__result-detail {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 440px) {
+    .mrc-moon-sign__result-row {
+        grid-template-columns: 1fr;
+    }
+
+    .mrc-moon-sign__zodiac {
+        margin-top: -.25rem;
+    }
+
+    .mrc-moon-sign__result-detail {
+        grid-column: 1;
+    }
+}
