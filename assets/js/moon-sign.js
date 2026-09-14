@@ -101,6 +101,7 @@
         const swe = await loadSwissEphemeris();
         const julianDay = julianDayAtUtc(swe, utcIso);
         const results = [];
+        let trueNorthNodeLongitude = null;
 
         for (const body of bodies) {
             let bodyLongitude;
@@ -115,14 +116,32 @@
                 // the conventional chart default.
                 const houses = swe.houses(julianDay, geoLat, geoLon, 'P');
                 bodyLongitude = Number(houses?.ascmc?.[0]);
+            } else if (body.type === 'south_node') {
+                if (!Number.isFinite(trueNorthNodeLongitude)) {
+                    throw new Error('The South Node requires a valid True North Node calculation.');
+                }
+
+                // The South Node is exactly opposite the True North Node.
+                bodyLongitude = (trueNorthNodeLongitude + 180) % 360;
             } else {
-                const planetId = Number(swe?.[body.constant]);
+                // SE_TRUE_NODE is Swiss Ephemeris body id 11. Keep the numeric
+                // fallback for compatibility with wrapper builds that do not
+                // expose the named constant as a JavaScript property.
+                let planetId = Number(swe?.[body.constant]);
+                if (!Number.isFinite(planetId) && body.type === 'true_node') {
+                    planetId = 11;
+                }
+
                 if (!Number.isFinite(planetId)) {
                     throw new Error(`Swiss Ephemeris is missing ${body.constant}.`);
                 }
 
                 const position = swe.calc_ut(julianDay, planetId, swe.SEFLG_SWIEPH);
                 bodyLongitude = Number(position?.[0]);
+
+                if (body.type === 'true_node' && Number.isFinite(bodyLongitude)) {
+                    trueNorthNodeLongitude = ((bodyLongitude % 360) + 360) % 360;
+                }
             }
 
             if (!Number.isFinite(bodyLongitude)) {

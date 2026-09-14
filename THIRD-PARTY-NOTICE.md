@@ -25,7 +25,7 @@ wasm/swisseph.wasm
 wasm/swisseph.data
 ```
 
-v6 uses the wrapper's planetary constants and `calc_ut()` API for the ten planetary bodies, plus `houses()` / Swiss Ephemeris `swe_houses()` for the Rising Sign / Ascendant (`ascmc[0]`).
+v7 uses the wrapper's planetary constants and `calc_ut()` API for the ten planetary bodies and the True North Node (`SE_TRUE_NODE`), plus `houses()` / Swiss Ephemeris `swe_houses()` for the Rising Sign / Ascendant (`ascmc[0]`). The South Node is derived locally as the point 180° opposite the True North Node.
 
 Review both the wrapper license and Swiss Ephemeris license requirements before production use.
 

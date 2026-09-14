@@ -83,7 +83,7 @@ final class MRC_Moon_Admin {
         $url = admin_url('options-general.php?page=mrc-moon-sign');
         echo '<div class="notice notice-warning"><p>';
         echo wp_kses_post(sprintf(
-            __('Celestial Signs Calculator v6 still needs one or more local runtime assets. <a href="%s">Open the calculator settings</a> to install/repair them.', 'moonrise-moon-sign'),
+            __('Celestial Signs Calculator v7 still needs one or more local runtime assets. <a href="%s">Open the calculator settings</a> to install/repair them.', 'moonrise-moon-sign'),
             esc_url($url)
         ));
         echo '</p></div>';
@@ -99,7 +99,7 @@ final class MRC_Moon_Admin {
         ?>
         <div class="wrap">
             <h1><?php esc_html_e('Celestial Signs Calculator', 'moonrise-moon-sign'); ?></h1>
-            <p><strong><?php esc_html_e('Version 6.0.0', 'moonrise-moon-sign'); ?></strong> — <?php esc_html_e('Calculates tropical zodiac positions for the Sun, Moon, Rising/Ascendant, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, and Pluto. Location lookup remains local, including latitude/longitude, and Swiss Ephemeris runs as WebAssembly in the visitor’s browser.', 'moonrise-moon-sign'); ?></p>
+            <p><strong><?php esc_html_e('Version 7.0.0', 'moonrise-moon-sign'); ?></strong> — <?php esc_html_e('Calculates tropical zodiac positions for the Sun, Moon, Rising/Ascendant, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, True North Node, and South Node. Location lookup remains local, including latitude/longitude, and Swiss Ephemeris runs as WebAssembly in the visitor’s browser.', 'moonrise-moon-sign'); ?></p>
 
             <?php if (isset($_GET['mrc_wasm_install']) && $_GET['mrc_wasm_install'] === 'success') : ?>
                 <div class="notice notice-success is-dismissible"><p><?php esc_html_e('Swiss Ephemeris WebAssembly runtime installed successfully.', 'moonrise-moon-sign'); ?></p></div>
@@ -164,11 +164,11 @@ final class MRC_Moon_Admin {
                         <td><strong><?php esc_html_e('Browser reference test', 'moonrise-moon-sign'); ?></strong></td>
                         <td>
                             <button type="button" class="button" id="mrc-moon-browser-test" <?php disabled(empty($wasm['installed'])); ?>>
-                                <?php esc_html_e('Test 10 Bodies + Rising', 'moonrise-moon-sign'); ?>
+                                <?php esc_html_e('Test 10 Bodies + Rising + Nodes', 'moonrise-moon-sign'); ?>
                             </button>
                             <span id="mrc-moon-browser-test-result" style="margin-left:8px"></span>
                         </td>
-                        <td><?php esc_html_e('Moon ref + Honolulu Rising ref', 'moonrise-moon-sign'); ?></td>
+                        <td><?php esc_html_e('Moon ref + Honolulu Rising ref + True/South Node', 'moonrise-moon-sign'); ?></td>
                     </tr>
                 </tbody>
             </table>
@@ -233,8 +233,24 @@ final class MRC_Moon_Admin {
                             const risingOk = Number.isFinite(risingLongitude) && Math.abs(risingLongitude - 275.5380) < 0.1;
                             const risingSign = Number.isFinite(risingLongitude) && Math.floor(risingLongitude / 30) === 9 ? 'Capricorn' : 'Unexpected sign';
 
-                            const allOk = moonOk && risingOk;
-                            result.textContent = `10 bodies OK — Moon ${moonLongitude.toFixed(4)}° ${moonSign}; Rising ${risingLongitude.toFixed(4)}° ${risingSign}${allOk ? ' — OK' : ' — CHECK'}`;
+                            // True North Node comes directly from Swiss Ephemeris.
+                            // SE_TRUE_NODE is body id 11; the fallback keeps this
+                            // diagnostic compatible with wrappers that omit the
+                            // named JavaScript constant.
+                            let trueNodeId = Number(swe.SE_TRUE_NODE);
+                            if (!Number.isFinite(trueNodeId)) {
+                                trueNodeId = 11;
+                            }
+                            const trueNodePosition = swe.calc_ut(jd, trueNodeId, swe.SEFLG_SWIEPH);
+                            const trueNodeRaw = Number(trueNodePosition?.[0]);
+                            const trueNodeLongitude = Number.isFinite(trueNodeRaw) ? ((trueNodeRaw % 360) + 360) % 360 : NaN;
+                            const southNodeLongitude = Number.isFinite(trueNodeLongitude) ? (trueNodeLongitude + 180) % 360 : NaN;
+                            const nodeOpposition = Number.isFinite(trueNodeLongitude) && Number.isFinite(southNodeLongitude)
+                                ? Math.abs((((southNodeLongitude - trueNodeLongitude) % 360) + 360) % 360 - 180) < 0.000001
+                                : false;
+
+                            const allOk = moonOk && risingOk && nodeOpposition;
+                            result.textContent = `10 bodies + Rising + Nodes — Moon ${moonLongitude.toFixed(4)}° ${moonSign}; Rising ${risingLongitude.toFixed(4)}° ${risingSign}; North ${trueNodeLongitude.toFixed(4)}°; South ${southNodeLongitude.toFixed(4)}°${allOk ? ' — OK' : ' — CHECK'}`;
                             result.style.color = allOk ? '#18752c' : '#b32d2e';
                         } catch (error) {
                             result.textContent = `Failed: ${error?.message || error}`;

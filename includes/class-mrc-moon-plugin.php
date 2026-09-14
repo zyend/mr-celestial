@@ -246,7 +246,9 @@ final class MRC_Moon_Plugin {
             ['name' => 'Saturn',  'sentence_name' => 'Saturn',   'constant' => 'SE_SATURN',  'symbol' => '♄', 'type' => 'planet'],
             ['name' => 'Uranus',  'sentence_name' => 'Uranus',   'constant' => 'SE_URANUS',  'symbol' => '♅', 'type' => 'planet'],
             ['name' => 'Neptune', 'sentence_name' => 'Neptune',  'constant' => 'SE_NEPTUNE', 'symbol' => '♆', 'type' => 'planet'],
-            ['name' => 'Pluto',   'sentence_name' => 'Pluto',    'constant' => 'SE_PLUTO',   'symbol' => '♇', 'type' => 'planet'],
+            ['name' => 'Pluto',      'sentence_name' => 'Pluto',               'constant' => 'SE_PLUTO',     'symbol' => '♇',  'type' => 'planet'],
+            ['name' => 'North Node', 'sentence_name' => 'The True North Node', 'constant' => 'SE_TRUE_NODE', 'symbol' => '☊ᵀ', 'type' => 'true_node'],
+            ['name' => 'South Node', 'sentence_name' => 'The South Node',      'constant' => '',             'symbol' => '☋',  'type' => 'south_node'],
         ];
     }
 
